@@ -20,10 +20,10 @@ class StandardHolder(ABC):
         self.__define_property(property_name)
 
     def get_definition(self) -> str:
-        query = f"CREATE TABLE IF NOT EXISTS {self.__table_name} ("
-        query += ', '.join(f"{k} {prop.get_sql()} NOT NULL DEFAULT '{prop.value_to_str()}'" for k, prop in self.__properties.items())
+        query = f"CREATE TABLE IF NOT EXISTS `{self.__table_name}` ("
+        query += ', '.join(f"`{k}` {prop.get_sql()} NOT NULL DEFAULT '{prop.value_to_str()}'" for k, prop in self.__properties.items())
         query += ", PRIMARY KEY (" 
-        query += ', '.join(prim for prim in self.__primary)
+        query += ', '.join(f"`{prim}`" for prim in self.__primary)
         query += "));"
 
         return query
