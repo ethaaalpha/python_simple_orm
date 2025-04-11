@@ -7,7 +7,15 @@ class StandardObject(ABC):
     @property
     def value(self):
         return self._value
-    
+
+    def sqltype_to_value(self, sql_value):
+        """Should be only used for dao operations"""
+        return sql_value
+
+    def value_to_sqltype(self):
+        """Should be only used for dao operations"""
+        return self.value
+
     @value.setter
     def value(self, new_value):
         self._value = new_value
@@ -16,12 +24,9 @@ class StandardObject(ABC):
     def get_sql(self):
         pass
 
-    @abstractmethod
-    def value_to_sqltype(self, value):
-        """Should be only used for dao operations"""
-        pass
-
-    @abstractmethod
-    def sqltype_to_value(self):
-        """Should be only used for dao operations"""
-        pass
+    @staticmethod
+    def is_type_of(value, type):
+        if isinstance(value, type):
+            return
+        else:
+            raise TypeError(f"Invalid type value should be {type}")

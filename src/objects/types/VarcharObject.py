@@ -1,7 +1,7 @@
 from src.objects.StandardObject import StandardObject
 
-class TextObject(StandardObject):
-    def __init__(self, value, size = 16384):
+class VarcharObject(StandardObject):
+    def __init__(self, value, size=1024):
         self.is_type_of(value, str)
         super().__init__(value)
 
@@ -11,4 +11,4 @@ class TextObject(StandardObject):
             self._size = size
 
     def get_sql(self):
-        return f"text({self._size})"
+        return f"varchar({self._size})"
