@@ -2,16 +2,18 @@ from abc import ABC
 from src.objects.StandardObject import StandardObject
 
 class StandardHolder(ABC):
-    __properties: dict[str, StandardObject] = {}
+    __properties: dict[str, tuple[type[StandardObject], dict]] = {}
     __table_name = None
     __primary = []
 
+    def __init__(self, value):
+
     def __new__(cls, table_name):
         cls.__table_name = table_name
-        return super().__new__()
+        return super().__new__(cls)
 
     @classmethod
-    def register_object(cls, property_name: str, property_object: StandardObject, primary = False):
+    def register_object(cls, property_name: str, property_object: type[StandardObject], property_kwargs: dict, primary = False):
         if cls.__properties.get(property_name) != None:
             raise NameError("Property name already existing")
         if len(property_name) == 0:
