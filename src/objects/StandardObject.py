@@ -14,7 +14,7 @@ class StandardObject(ABC):
 
     def value_to_sqltype(self):
         """Should be only used for dao operations"""
-        return self.value
+        return "'" + self.value + "'"
 
     @value.setter
     def value(self, new_value):

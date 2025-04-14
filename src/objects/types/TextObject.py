@@ -1,9 +1,8 @@
 from src.objects.StandardObject import StandardObject
 
 class TextObject(StandardObject):
-    def __init__(self, value, size = 16384):
-        self.is_type_of(value, str)
-        super().__init__(value)
+    def __init__(self, size = 16384):
+        super().__init__(None)
 
         if size <= 0:
             raise ValueError("Size must be > 0!")

@@ -1,7 +1,7 @@
 from src.objects.StandardObject import StandardObject
 
 class VarcharObject(StandardObject):
-    def __init__(self, value, size=1024):
+    def __init__(self, value, size=255):
         self.is_type_of(value, str)
         super().__init__(value)
 
