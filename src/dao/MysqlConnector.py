@@ -1,5 +1,7 @@
 from dataclasses import dataclass, asdict
-import mysql.connector as mysql 
+import mysql.connector as mysql
+
+from src.utils.decorators import singleton 
 
 @dataclass
 class ConnectorData:
@@ -9,16 +11,10 @@ class ConnectorData:
     password: str
     database: str
 
+@singleton
 class MysqlConnector:
-    _instance = None
-    
-    # singleton
-    def __new__(cls, *args, **kwargs):
-        if not isinstance(cls._instance, cls):
-            cls._instance = object.__new__(cls, *args, **kwargs)
-        return cls._instance
-    
     def __init__(self, data: ConnectorData):
+        self.link = None
         self._data = data
 
     def connect(self):
@@ -30,17 +26,26 @@ class MysqlConnector:
         if self.link.is_connected():
             self.link.disconnect()
 
-    def execute_query(self, query, params) -> list[tuple]:
-        with self.link.cursor() as cursor:
+    @classmethod
+    def execute_query(cls, query, params) -> list[tuple]:
+        connector = MysqlConnector()
+        connector.connect()
+
+        with connector.link.cursor() as cursor:
             cursor.execute(query, params)
 
             result = cursor
+        connector.disconnect()
 
+    @classmethod
+    def execute_update(cls, query, params):
+        connector = MysqlConnector()
+        connector.connect()
 
-    def execute_update(self, query, params):
-        with self.link.cursor() as cursor:
+        print(connector.link.cursor(connector))
+        with connector.link.cursor() as cursor:
             try:
                 cursor.execute(query, params)
             except mysql.Error as err:
                 print("Failed creating database: {}".format(err))
-                exit(1)
+        connector.disconnect()
