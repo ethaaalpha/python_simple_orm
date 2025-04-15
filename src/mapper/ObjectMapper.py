@@ -22,8 +22,16 @@ class ObjectMapper():
 
         self._connector.execute_update(query)
 
-    def get(self, holder_class, comparators: list[str] = [], limit=None, order: list[str] = None):
+    def remove_multiple(self, holder_class, comparators: list[str]):
+        """We recommand to use `Comparators` methods."""
+
+        query = self.__delete_multi_method(holder_class.table_name, comparators)
+
+        self._connector.execute_update(query)
+
+    def get(self, holder_class, comparators: list[str] = [], limit=None, order: list[str] = None) -> list:
         """We recommand to use `Comparators`, `Orders` methods."""
+        selection = list(holder_class.properties.keys())
         extra_params = " "
 
         if (limit != None):
@@ -32,9 +40,22 @@ class ObjectMapper():
             extra_params += "ORDER BY "
             extra_params += ", ".join(o for o in order)
 
-        query = self.__get_method(holder_class.table_name, comparators, extra_params)
+        query = self.__get_method(holder_class.table_name, selection, comparators, extra_params)
+        results = self._connector.execute_query(query)
 
-        self._connector.execute_update(query)
+        return self.__results_to_holders(selection, results, holder_class)
+
+    def __results_to_holders(self, selection, results, result_class):
+        zip_results = [dict(zip(selection, row)) for row in results]
+        holders = []
+
+        for row in zip_results:
+            h = result_class()
+            
+            for attr, value in row.items():
+                setattr(h, attr, value)
+            holders.append(h)
+        return holders
 
     def __names_and_values(self, holder):
         names = [name for name in holder._values.keys()]
@@ -62,7 +83,17 @@ class ObjectMapper():
         return f"DELETE FROM {table_name} WHERE {mapped_joined};"
     
     @staticmethod
-    def __get_method(table_name, comparators, extra_params):
+    def __get_method(table_name, selection: list, comparators: list, extra_params: str):
+        comparators_joined = " AND ".join(comp for comp in comparators)
+        selection_joined = ", ".join(item for item in selection)
+
+        if (len(comparators) == 0):
+            return f"SELECT {selection_joined} FROM {table_name}{extra_params};"
+        else:
+            return f"SELECT {selection_joined} FROM {table_name} WHERE {comparators_joined}{extra_params};"
+
+    @staticmethod
+    def __delete_multi_method(table_name, comparators: list):
         comparators_joined = " AND ".join(comp for comp in comparators)
 
-        return f"SELECT * FROM {table_name} WHERE {comparators_joined}{extra_params};"
+        return f"DELETE FROM {table_name} WHERE {comparators_joined};"

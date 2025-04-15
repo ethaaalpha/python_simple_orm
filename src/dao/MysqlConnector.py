@@ -27,10 +27,24 @@ class MysqlConnector:
 
     def execute_update(self, query, params = {}):
         self.connect()
-        print(query)
+        
+        print(f"update query: {query}")
         with self.link.cursor() as cursor:
             try:
                 cursor.execute(query, params)
             except mysql.Error as err:
-                print("Failed creating database: {}".format(err))
+                print("Failed running update query: {}".format(err))
         self.disconnect()
+
+    def execute_query(self, query, params = {}):
+        self.connect()
+
+        print(f"select query: {query}")
+        with self.link.cursor() as cursor:
+            try:
+                cursor.execute(query, params)
+                return cursor.fetchall()
+            except mysql.Error as err:
+                print("Failed running fetch query: {}".format(err))     
+        self.disconnect()
+           

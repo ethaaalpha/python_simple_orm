@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import copy
+from src.orm import ORM
 from src.mapper.ObjectMapper import ObjectMapper
 from src.objects.StandardObject import StandardObject
 
@@ -11,6 +12,27 @@ class StandardHolder(ABC):
 
     def __init__(self):
         self._values = copy.deepcopy(self.properties)
+
+    def save(self):
+        ORM().get_mapper().add_or_update(self)
+
+    def delete(self):
+        ORM().get_mapper().remove(self)
+
+    @classmethod
+    def get(self, **kwargs) -> list:
+        """See `ObjectMapper.get()` for kwargs."""
+        return ORM().get_mapper().get(self.__class__, **kwargs)
+
+    @classmethod
+    def get_definition(cls) -> str:
+        query = f"CREATE TABLE IF NOT EXISTS `{cls.table_name}` ("
+        query += ', '.join(f"`{k}` {prop.get_sql()} NOT NULL DEFAULT {prop.value_to_sqltype()}" for k, prop in cls.properties.items())
+        query += ", PRIMARY KEY (" 
+        query += ', '.join(f"`{prim}`" for prim in cls.primary)
+        query += "));"
+
+        return query
 
     @classmethod
     @abstractmethod
@@ -25,16 +47,6 @@ class StandardHolder(ABC):
         cls.table_name = cls.__name__
         cls.primary = []
         ObjectMapper.registered_class.append(cls) 
-
-    @classmethod
-    def get_definition(cls) -> str:
-        query = f"CREATE TABLE IF NOT EXISTS `{cls.table_name}` ("
-        query += ', '.join(f"`{k}` {prop.get_sql()} NOT NULL DEFAULT '{prop.value_to_sqltype()}'" for k, prop in cls.properties.items())
-        query += ", PRIMARY KEY (" 
-        query += ', '.join(f"`{prim}`" for prim in cls.primary)
-        query += "));"
-
-        return query
 
     @classmethod
     def _register_object(cls, property_name: str, property_object: type[StandardObject], primary = False):
