@@ -22,15 +22,24 @@ class ObjectMapper():
 
         self._connector.execute_update(query)
 
-    def get(self, holder_class, primary_values):
-        query = self.__get_method(holder_class.primary, primary_values)
+    def get(self, holder_class, comparators: list[str] = [], limit=None, order: list[str] = None):
+        """We recommand to use `Comparators`, `Orders` methods."""
+        extra_params = " "
 
-        print(query)
-        # self._connector.execute(query)
+        if (limit != None):
+            extra_params += f"LIMIT {limit} "
+        if (order != None):
+            extra_params += "ORDER BY "
+            extra_params += ", ".join(o for o in order)
+
+        query = self.__get_method(holder_class.table_name, comparators, extra_params)
+
+        self._connector.execute_update(query)
 
     def __names_and_values(self, holder):
         names = [name for name in holder._values.keys()]
         values = [f"{it.value_to_sqltype()}" for it in holder._values.values()]
+
         return names, values
 
     @staticmethod
@@ -53,8 +62,7 @@ class ObjectMapper():
         return f"DELETE FROM {table_name} WHERE {mapped_joined};"
     
     @staticmethod
-    def __get_method(table_name, names, values):
-        mapped = dict(zip(names, values))
-        mapped_joined = ", ".join(f"{k}={v}" for k, v in mapped.items())
+    def __get_method(table_name, comparators, extra_params):
+        comparators_joined = " AND ".join(comp for comp in comparators)
 
-        return f"SELECT * FROM {table_name} WHERE {mapped_joined};"
+        return f"SELECT * FROM {table_name} WHERE {comparators_joined}{extra_params};"
