@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from pprint import pprint
+import sys
 import mysql.connector as mysql
 
 @dataclass
@@ -11,6 +12,8 @@ class ConnectorData:
     database: str
 
 class MysqlConnector:
+    error = False
+
     def __init__(self, data: ConnectorData):
         self.link = None
         self._data = data
@@ -33,7 +36,9 @@ class MysqlConnector:
             try:
                 cursor.execute(query, params)
             except mysql.Error as err:
-                print("Failed running update query: {}".format(err))
+                if self.error:
+                    raise err
+                print("Failed running update query: {}".format(err), file=sys.stderr)
         self.disconnect()
 
     def execute_query(self, query, params = {}):
@@ -45,6 +50,8 @@ class MysqlConnector:
                 cursor.execute(query, params)
                 return cursor.fetchall()
             except mysql.Error as err:
-                print("Failed running fetch query: {}".format(err))     
+                if self.error:
+                    raise err
+                print("Failed running fetch query: {}".format(err), file=sys.stderr)     
         self.disconnect()
            

@@ -70,10 +70,7 @@ class ObjectMapper():
 
         update_part = ', '.join([f"{n}=VALUES({n})" for n in names])
 
-        return f""" INSERT INTO `{table_name}` ({names_joined})
-                    VALUES ({values_joined})
-                    ON DUPLICATE KEY UPDATE {update_part};
-                    """
+        return f"INSERT INTO `{table_name}` ({names_joined}) VALUES ({values_joined}) ON DUPLICATE KEY UPDATE {update_part};"
     
     @staticmethod
     def __delete_method(table_name, names, values):

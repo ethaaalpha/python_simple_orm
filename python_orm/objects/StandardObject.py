@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 
 class StandardObject(ABC):
-    def __init__(self, value):
+    def __init__(self, value, no_default = False):
         self._value = value
+        self.no_default = no_default
 
     @property
     def value(self):
@@ -14,7 +15,7 @@ class StandardObject(ABC):
 
     def value_to_sqltype(self):
         """Should be only used for dao operations"""
-        return "'" + self.value + "'"
+        return "'" + str(self._value) + "'"
 
     @value.setter
     def value(self, new_value):

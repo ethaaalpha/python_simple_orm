@@ -8,7 +8,10 @@ class FloatObject(StandardObject):
         if precision <= 0:
             raise ValueError("Size must be > 0!")
         else:
-            self._size = precision
+            self._precision = precision
 
     def get_sql(self):
-        return f"float({self.precision})"
+        return f"float({self._precision})"
+    
+    def sqltype_to_value(self, sql_value):
+        return float(sql_value)

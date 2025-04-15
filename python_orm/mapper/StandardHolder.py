@@ -5,7 +5,7 @@ from python_orm.mapper.ObjectMapper import ObjectMapper
 from python_orm.objects.StandardObject import StandardObject
 
 class StandardHolder(ABC):
-    """StandardHolder is a simple mapped to database object, we recommand adding subclass.register_class() at the end of the definition class file."""
+    """StandardHolder is a simple mapped to database object, we recomm end of the definition class file."""
     primary = []
     table_name = None
     properties: dict[str, tuple[type[StandardObject], dict]] = {}
@@ -20,14 +20,15 @@ class StandardHolder(ABC):
         ORM().get_mapper().remove(self)
 
     @classmethod
-    def get(self, **kwargs) -> list:
+    def get(cls, **kwargs) -> list:
         """See `ObjectMapper.get()` for kwargs."""
-        return ORM().get_mapper().get(self.__class__, **kwargs)
+        return ORM().get_mapper().get(cls, **kwargs)
 
     @classmethod
     def get_definition(cls) -> str:
         query = f"CREATE TABLE IF NOT EXISTS `{cls.table_name}` ("
-        query += ', '.join(f"`{k}` {prop.get_sql()} NOT NULL DEFAULT {prop.value_to_sqltype()}" for k, prop in cls.properties.items())
+        query += ', '.join(f"`{k}` {prop.get_sql()} \
+{"NOT NULL DEFAULT " + prop.value_to_sqltype() if not prop.no_default else "NULL"}" for k, prop in cls.properties.items())
         query += ", PRIMARY KEY (" 
         query += ', '.join(f"`{prim}`" for prim in cls.primary)
         query += "));"
