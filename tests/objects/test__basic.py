@@ -27,3 +27,7 @@ def test_dumb_object():
     obj_new.save()
     obj = orm.get_mapper().get(DumbObject, limit=1)[0]
     assert obj_new.ymbud == obj.ymbud
+
+    assert len(DumbObject.get(limit=1)) == 1
+    obj_new.remove()
+    assert len(DumbObject.get()) == 0

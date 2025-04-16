@@ -21,6 +21,9 @@ def test_complex():
 
     obj = AllHolder()
     obj.save()
+
+    assert len(AllHolder().get()) == 1
+
     obj.remove()
-    
     assert len(AllHolder().get()) == 0
+

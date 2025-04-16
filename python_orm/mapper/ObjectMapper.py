@@ -17,7 +17,7 @@ class ObjectMapper():
         self._connector.execute_update(query)
 
     def remove(self, holder):
-        names, values = self.__names_and_values(holder)
+        names, values = self.__names_and_values(holder, only_primary=True)
         query = self.__delete_method(holder.table_name, names, values)
 
         self._connector.execute_update(query)
@@ -57,9 +57,9 @@ class ObjectMapper():
             holders.append(h)
         return holders
 
-    def __names_and_values(self, holder):
-        names = [name for name in holder._values.keys()]
-        values = [f"{it.value_to_sqltype()}" for it in holder._values.values()]
+    def __names_and_values(self, holder, only_primary=False):
+        names = holder.primary if only_primary else [name for name in holder._values.keys()]
+        values = [f"{holder._values[it].value_to_sqltype()}" for it in names]
 
         return names, values
 
