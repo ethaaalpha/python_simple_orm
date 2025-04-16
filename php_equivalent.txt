@@ -36,3 +36,5 @@ getter, setter -> @property, getter/setter func
 
 str to time -> strptime, DateTime::createFromFormat
 time to str -> strftime, strftime
+
+https://rosettacode.org/
