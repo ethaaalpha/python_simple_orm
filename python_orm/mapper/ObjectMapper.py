@@ -38,7 +38,7 @@ class ObjectMapper():
             extra_params += f"LIMIT {limit} "
         if (order != None):
             extra_params += "ORDER BY "
-            extra_params += ", ".join(o for o in order)
+            extra_params += ", ".join(order)
 
         query = self.__get_method(holder_class.table_name, selection, comparators, extra_params)
         results = self._connector.execute_query(query)
@@ -58,7 +58,7 @@ class ObjectMapper():
         return holders
 
     def __names_and_values(self, holder, only_primary=False):
-        names = holder.primary if only_primary else [name for name in holder._values.keys()]
+        names = holder.primary if only_primary else list(holder._values.keys())
         values = [f"{holder._values[it].value_to_sqltype()}" for it in names]
 
         return names, values
@@ -81,8 +81,8 @@ class ObjectMapper():
     
     @staticmethod
     def __get_method(table_name, selection: list, comparators: list, extra_params: str):
-        comparators_joined = " AND ".join(comp for comp in comparators)
-        selection_joined = ", ".join(item for item in selection)
+        comparators_joined = " AND ".join(comparators)
+        selection_joined = ", ".join(selection)
 
         if (len(comparators) == 0):
             return f"SELECT {selection_joined} FROM `{table_name}`{extra_params};"

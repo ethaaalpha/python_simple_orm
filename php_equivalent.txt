@@ -1,0 +1,38 @@
+python, php
+string interpolation -> {var}, $var
+static methods -> @staticmethod, public static
+automatic constructor -> @dataclass, construtor promotion
+mysql connection -> mysql.connector, php_mysql module / mysqli
+# almost all the same methods for mysql
+
+maps -> dict {}, array ()
+maps keys -> dict.keys(), array_keys($map)
+maps values -> dict.values(), array_values($map)
+maps iterate -> for k, v in dict.items(), $map as $k => $v
+maps zip -> zip, array_map()
+
+list -> list [], list ()
+list pop -> list.pop(), array_pop($arr)
+
+join(sep, values) -> sep.join(values), implode(sep, values)
+
+attribute definition -> setattr(obj, attr, value), obj.attr = value
+
+variable references -> a, &a
+list comprehension -> [x for x in arr], array_map(fn($x) => $x, $arr)
+(also fitlering possible with array_filter)
+dict comprehension -> [f"{k}{v} for k, v in arr.items()], array_map(fn($k, $v) => "$k,$v", array_keys($arr), array_values($arr))
+
+class inherit -> class Child(Parent), class Child extends Parent
+
+shallow copy -> copy.copy(item), clone item
+deep copy -> copy.deepcopy(item), 
+    - manual implementation of __clone
+    - trick unserialize(serialize($obj))
+
+class var in php need instantiation, also defined with static keyword
+
+getter, setter -> @property, getter/setter func
+
+str to time -> strptime, DateTime::createFromFormat
+time to str -> strftime, strftime
