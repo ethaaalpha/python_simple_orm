@@ -1,7 +1,7 @@
 from dataclasses import dataclass, asdict
 from pprint import pprint
-import sys
 import mysql.connector as mysql
+import sys
 
 @dataclass
 class ConnectorData:
@@ -54,4 +54,3 @@ class MysqlConnector:
                     raise err
                 print("Failed running fetch query: {}".format(err), file=sys.stderr)     
         self.disconnect()
-           

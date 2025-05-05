@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-import copy
 from python_orm.orm import ORM
 from python_orm.mapper.ObjectMapper import ObjectMapper
 from python_orm.objects.StandardObject import StandardObject
+import copy
 
 class StandardHolder(ABC):
     """StandardHolder is a simple mapped to database object, we recomm end of the definition class file."""
@@ -18,6 +18,17 @@ class StandardHolder(ABC):
 
     def remove(self):
         ORM().get_mapper().remove(self)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            if len(self.properties) == len(other.properties) and self.properties.keys() == other.properties.keys():
+                for property in self.properties.keys():
+                    if getattr(other, property) != getattr(self, property):
+                        return False
+                return True
+            else:
+                return False
+        return False
 
     @classmethod
     def get(cls, **kwargs) -> list:
@@ -47,7 +58,9 @@ class StandardHolder(ABC):
         cls.properties = {}
         cls.table_name = cls.__name__
         cls.primary = []
-        ObjectMapper.registered_class.append(cls) 
+
+        if cls not in ObjectMapper.registered_class:
+            ObjectMapper.registered_class.append(cls) 
 
     @classmethod
     def _register_object(cls, property_name: str, property_object: type[StandardObject], primary = False):

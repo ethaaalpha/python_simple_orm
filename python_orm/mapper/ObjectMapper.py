@@ -45,6 +45,11 @@ class ObjectMapper():
 
         return self.__results_to_holders(selection, results, holder_class)
 
+    def clear_tables(self):
+        for cls in self.registered_class:
+            query = self.__truncate_method(cls.table_name)
+            self._connector.execute_query(query)
+
     def __results_to_holders(self, selection, results, result_class):
         zip_results = [dict(zip(selection, row)) for row in results]
         holders = []
@@ -94,3 +99,7 @@ class ObjectMapper():
         comparators_joined = " AND ".join(comp for comp in comparators)
 
         return f"DELETE FROM `{table_name}` WHERE {comparators_joined};"
+
+    @staticmethod
+    def __truncate_method(table_name):
+        return f"TRUNCATE TABLE {table_name};"

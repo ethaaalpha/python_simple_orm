@@ -1,6 +1,8 @@
-from python_orm.objects.types.BooleanObject import BooleanObject
-from python_orm.objects.types.DatetimeObject import DatetimeObject
-from python_orm.objects.types.FloatObject import FloatObject
-from python_orm.objects.types.IntegerObject import IntegerObject
-from python_orm.objects.types.TextObject import TextObject
-from python_orm.objects.types.VarcharObject import VarcharObject
+from .BooleanObject import BooleanObject
+from .DatetimeObject import DatetimeObject
+from .FloatObject import FloatObject
+from .IntegerObject import IntegerObject
+from .TextObject import TextObject
+from .VarcharObject import VarcharObject
+
+__all__ = ["BooleanObject", "DatetimeObject", "FloatObject", "IntegerObject", "TextObject", "VarcharObject"]

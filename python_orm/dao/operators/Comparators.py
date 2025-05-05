@@ -1,24 +1,26 @@
-class Comparators:
-    @staticmethod
-    def eq(a: str, b: str) -> str:
-        return f"{a}='{b}'"
-    
-    @staticmethod
-    def gt(a: str, b: str) -> str:
-        return f"{a}>'{b}'"
-    
-    @staticmethod
-    def lt(a: str, b: str) -> str:
-        return f"{a}<'{b}'"
-    
-    @staticmethod
-    def gteq(a: str, b: str) -> str:
-        return f"{a}>='{b}'"
-    
-    @staticmethod
-    def lteq(a: str, b: str) -> str:
-        return f"{a}<='{b}'"
+def __encapsulate(value: str):
+    if isinstance(value, int) or isinstance(value, bool) or isinstance(value, float):
+        return value
+    else:
+        return f"'{value}'"
 
-    @staticmethod
-    def noteq(a: str, b: str) -> str:
-        return f"{a}!='{b}'"
+def eq(a: str, b: str) -> str:
+    """
+    Do not work for FloatObject due to floating-point precision!
+    """
+    return f"{a}={__encapsulate(b)}"
+
+def gt(a: str, b: str) -> str:
+    return f"{a}>{__encapsulate(b)}"
+
+def lt(a: str, b: str) -> str:
+    return f"{a}<{__encapsulate(b)}"
+
+def gteq(a: str, b: str) -> str:
+    return f"{a}>={__encapsulate(b)}"
+
+def lteq(a: str, b: str) -> str:
+    return f"{a}<={__encapsulate(b)}"
+
+def noteq(a: str, b: str) -> str:
+    return f"{a}!={__encapsulate(b)}"
