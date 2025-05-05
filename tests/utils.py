@@ -12,4 +12,5 @@ def init_orm() -> ORM:
 
     orm = ORM()
     orm.init(data)
+    orm.get_mapper().clear_tables()
     return orm

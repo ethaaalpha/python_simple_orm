@@ -1,5 +1,5 @@
 from python_orm.mapper.StandardHolder import StandardHolder
-from python_orm.objects.types.VarcharObject import VarcharObject
+from python_orm.objects.types import VarcharObject
 from tests.utils import init_orm
 
 class DumbObject(StandardHolder):
@@ -19,9 +19,15 @@ def test_dumb_object():
     orm.get_connector().execute_query(f"describe {DumbObject.__name__}")
     obj.save()
 
+    # equal
     obj_new = orm.get_mapper().get(DumbObject, limit=1)[0]
     assert obj_new.dumby == obj.dumby
     assert obj_new.ymbud == obj.ymbud
+    assert obj_new == obj
+
+    # not equal
+    obj.dumby = "coucou"
+    assert obj != obj_new
 
     obj_new.ymbud = "migouel"
     obj_new.save()
