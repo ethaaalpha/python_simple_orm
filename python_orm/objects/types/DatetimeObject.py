@@ -12,7 +12,7 @@ class DatetimeObject(StandardObject):
         return f"DATETIME"
 
     def value_to_sqltype(self):
-        return "'" + datetime.strftime(self._value, self.format) + "'"
+        return  datetime.strftime(self._value, self.format)
     
     def sqltype_to_value(self, sql_value):
         return datetime.strptime(sql_value, self.format)

@@ -1,5 +1,4 @@
 from dataclasses import dataclass, asdict
-from pprint import pprint
 import mysql.connector as mysql
 import sys
 

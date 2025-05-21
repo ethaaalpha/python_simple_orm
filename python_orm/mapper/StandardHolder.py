@@ -43,7 +43,7 @@ class StandardHolder(ABC):
     def get_definition(cls) -> str:
         query = f"CREATE TABLE IF NOT EXISTS `{cls.table_name}` ("
         query += ', '.join(f"`{k}` {prop.get_sql()} \
-{"NOT NULL DEFAULT " + prop.value_to_sqltype() if not prop.no_default else "NULL"}" for k, prop in cls.properties.items())
+{"NOT NULL DEFAULT " + f"'{prop.value_to_sqltype()}'" if not prop.no_default else "NULL"}" for k, prop in cls.properties.items())
         query += ", PRIMARY KEY (" 
         query += ', '.join(f"`{prim}`" for prim in cls.primary)
         query += "));"

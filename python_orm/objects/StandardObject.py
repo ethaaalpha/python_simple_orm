@@ -24,7 +24,7 @@ class StandardObject(ABC):
 
     def value_to_sqltype(self):
         """Should be only used for dao operations"""
-        return "'" + str(self._value) + "'"
+        return str(self._value)
 
     @abstractmethod
     def get_sql(self):

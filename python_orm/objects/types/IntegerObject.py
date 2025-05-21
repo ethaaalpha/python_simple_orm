@@ -10,6 +10,5 @@ class IntegerObject(StandardObject):
     def get_sql(self):
         return f"int({self._size})"
 
-    
     def sqltype_to_value(self, sql_value):
         return int(sql_value)

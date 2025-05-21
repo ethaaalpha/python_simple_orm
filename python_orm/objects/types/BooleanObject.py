@@ -9,8 +9,8 @@ class BooleanObject(StandardObject):
         return f"boolean"
 
     def value_to_sqltype(self):
-        return str(self._value)
-    
+        return self._value
+
     def sqltype_to_value(self, sql_value):
         if sql_value.lower() in ("true", "1", "yes"):
             return True
