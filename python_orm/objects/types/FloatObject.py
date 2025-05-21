@@ -1,9 +1,9 @@
 from python_orm.objects.StandardObject import StandardObject
 
 class FloatObject(StandardObject):
-    def __init__(self, value, precision = 15):
+    def __init__(self, value, precision = 15, validator=None):
         self.is_type_of(value, float)
-        super().__init__(value)
+        super().__init__(value, validator)
 
         if precision <= 0:
             raise ValueError("Size must be > 0!")

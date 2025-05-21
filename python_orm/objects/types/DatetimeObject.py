@@ -4,9 +4,9 @@ from datetime import datetime
 class DatetimeObject(StandardObject):
     format = "%Y-%m-%d %H:%M:%S"
 
-    def __init__(self, value):
+    def __init__(self, value=datetime.now(), validator=None):
         self.is_type_of(value, datetime)
-        super().__init__(value)
+        super().__init__(value, validator)
 
     def get_sql(self):
         return f"DATETIME"

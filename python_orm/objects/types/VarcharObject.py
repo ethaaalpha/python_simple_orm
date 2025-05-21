@@ -1,9 +1,9 @@
 from python_orm.objects.StandardObject import StandardObject
 
 class VarcharObject(StandardObject):
-    def __init__(self, value, size=255):
+    def __init__(self, value, size=255, validator=None):
         self.is_type_of(value, str)
-        super().__init__(value)
+        super().__init__(value, validator)
 
         if size <= 0:
             raise ValueError("Size must be > 0!")

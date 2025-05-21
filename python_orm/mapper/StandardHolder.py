@@ -16,6 +16,10 @@ class StandardHolder(ABC):
     def save(self):
         ORM().get_mapper().add_or_update(self)
 
+    def validate(self):
+        for val in self._values.values():
+            val.validate()
+
     def remove(self):
         ORM().get_mapper().remove(self)
 
